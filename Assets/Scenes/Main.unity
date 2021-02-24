@@ -1732,6 +1732,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1923027700143195159, guid: 3bf1175a1919e244b80d05910b3e28fe,
         type: 3}
+      propertyPath: dieEffect
+      value: 
+      objectReference: {fileID: 1869509813425396, guid: 059a58b7031b96840ac6bb10f03ccfae,
+        type: 3}
+    - target: {fileID: 1923027700143195159, guid: 3bf1175a1919e244b80d05910b3e28fe,
+        type: 3}
       propertyPath: bodySprites.Array.data[0]
       value: 
       objectReference: {fileID: 21300000, guid: 453b92a9f25c44e44b990584cd298796,

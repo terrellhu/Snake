@@ -13,13 +13,18 @@ public class SnakeHead : MonoBehaviour
     private int y;
     private Vector3 headPos;
     private Transform canvas;
+    private bool isDie=false;
 
+    public GameObject dieEffect;
     public GameObject bodyPrefab;
     public Sprite[] bodySprites = new Sprite[2];
 
     private void Awake()
     {
         canvas = GameObject.Find("Canvas").transform;
+        gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>(PlayerPrefs.GetString("sh", "sh02"));
+        bodySprites[0] = Resources.Load<Sprite>(PlayerPrefs.GetString("sb01", "sb0201"));
+        bodySprites[1] = Resources.Load<Sprite>(PlayerPrefs.GetString("sb02", "sb0202"));
     }
     private void Start()
     {
@@ -29,7 +34,7 @@ public class SnakeHead : MonoBehaviour
     }
     private void Update()
     {
-        if (MainUIController.Instance.isPause == false)
+        if (MainUIController.Instance.isPause == false && isDie == false)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -98,7 +103,7 @@ public class SnakeHead : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Body"))
         {
-
+            Die();
         }
         else
         {
@@ -127,5 +132,29 @@ public class SnakeHead : MonoBehaviour
         body.GetComponent<Image>().sprite = bodySprites[index];
         body.transform.SetParent(canvas, false);
         bodyList.Add(body.transform);
+    }
+
+    void Die()
+    {
+        CancelInvoke();
+        isDie = true;
+        Instantiate(dieEffect);
+        PlayerPrefs.SetInt("lastl", MainUIController.Instance.length);
+        PlayerPrefs.SetInt("lasts", MainUIController.Instance.score);
+        if (PlayerPrefs.GetInt("bestl", 0) < MainUIController.Instance.length)
+        {
+            PlayerPrefs.SetInt("bestl", MainUIController.Instance.length);
+        }
+        if (PlayerPrefs.GetInt("bests", 0) < MainUIController.Instance.score)
+        {
+            PlayerPrefs.SetInt("bests", MainUIController.Instance.score);
+        }
+        StartCoroutine(GameOver(1.5f));
+    }
+
+    IEnumerator GameOver(float t)
+    {
+        yield return new WaitForSeconds(t);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 }
